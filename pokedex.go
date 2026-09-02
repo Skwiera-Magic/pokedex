@@ -2,8 +2,9 @@ package main
 
 import (
 	"bufio"
-	"os"
 	"fmt"
+	"os"
+	"pokedex/internal/pokeapi"
 )
 
 func pokedex(cfg *config) {
@@ -26,13 +27,16 @@ func pokedex(cfg *config) {
 			}
 			continue
 		} else {
-			fmt.Print("Unknown command\n")
+			fmt.Print("Unknown command, type help\n")
 		}
 	}
 }
 
 type config struct {
-	commands map[string]cliCommand
+	commands 			map[string]cliCommand
+	pokeapiClient 		pokeapi.Client
+	nextLocationsURL 	*string
+	prevLocationsURL 	*string
 }
 
 type cliCommand struct {
@@ -47,6 +51,16 @@ func getCommands() map[string]cliCommand {
 			name: 			"help",
 			description: 	"Displays help menu",
 			callback: 		commandHelp,
+		},
+		"map": {
+			name: 			"map",
+			description: 	"Next locations page",
+			callback: 		commandMapf,
+		},
+		"mapb": {
+			name: 			"mapb",
+			description: 	"Previous locations page",
+			callback: 		commandMapb,
 		},
 		"exit": {
 			name: 			"exit",
