@@ -6,7 +6,7 @@ import (
 	"fmt"
 )
 
-func pokedex() {
+func pokedex(cfg *config) {
 	scanner := bufio.NewScanner(os.Stdin)
 	for {
 		fmt.Print("Pokedex > ")
@@ -18,9 +18,9 @@ func pokedex() {
 		texted := scanner.Text()
 		cleaned := cleanInput(texted)
 		
-		command, exists := getCommands()[cleaned[0]]
+		command, exists := cfg.commands[cleaned[0]]
 		if exists {
-			err := command.callback()
+			err := command.callback(cfg)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -31,10 +31,14 @@ func pokedex() {
 	}
 }
 
+type config struct {
+	commands map[string]cliCommand
+}
+
 type cliCommand struct {
 	name			string
 	description		string
-	callback		func() error
+	callback		func(*config) error
 }
 
 func getCommands() map[string]cliCommand {

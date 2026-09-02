@@ -1,5 +1,8 @@
 package main
 
 func main() {
-	pokedex()
+	cfg := &config{
+		commands: getCommands(),
+	}
+	pokedex(cfg)
 }
