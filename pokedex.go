@@ -18,10 +18,14 @@ func pokedex(cfg *config) {
 		}
 		texted := scanner.Text()
 		cleaned := cleanInput(texted)
+		args := []string{}
+		if len(cleaned) > 1 {
+			args = cleaned[1:]
+		}
 		
 		command, exists := cfg.commands[cleaned[0]]
 		if exists {
-			err := command.callback(cfg)
+			err := command.callback(cfg, args...)
 			if err != nil {
 				fmt.Println(err)
 			}
@@ -42,7 +46,7 @@ type config struct {
 type cliCommand struct {
 	name			string
 	description		string
-	callback		func(*config) error
+	callback		func(*config, ...string) error
 }
 
 func getCommands() map[string]cliCommand {
@@ -61,6 +65,11 @@ func getCommands() map[string]cliCommand {
 			name: 			"mapb",
 			description: 	"Previous locations page",
 			callback: 		commandMapb,
+		},
+		"explore": {
+			name: 			"explore <location_name>",
+			description: 	"Check what pokemon are in the location",
+			callback: 		commandExplore,
 		},
 		"exit": {
 			name: 			"exit",
