@@ -16,6 +16,11 @@ func commandCatch(cfg *config, args ...string) error {
 	if err != nil {
 		return err
 	}
+	
+	if pokemon.BaseExperience <= 0 {
+		fmt.Println("there is no pokemon with this name")
+		return nil
+	}
 
 	res := rand.Intn(pokemon.BaseExperience)
 
